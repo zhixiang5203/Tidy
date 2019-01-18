@@ -3,6 +3,8 @@ package com.szx.tidy.app;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import com.mob.MobSDK;
+
 public class TApp extends Application {
 
     public static TApp tApp;
@@ -15,6 +17,7 @@ public class TApp extends Application {
     public void onCreate() {
         super.onCreate();
         tApp = this;
+        MobSDK.init(this);
     }
 
     @Override
