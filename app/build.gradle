@@ -23,12 +23,19 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 MobSDK {
     appKey "29d41e95c6ca0"
     appSecret "2b9d26b59e2e44f498331fcb8302b386"
     SMSSDK {
         version "3.2.1"
+    }
+    UMSSDK {}
+    BBSSDK {
+        theme "theme0"
     }
 }
 dependencies {

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.res.Configuration;
 
 import com.mob.MobSDK;
+import com.mob.bbssdk.BBSSDK;
+import com.mob.bbssdk.theme0.BBSTheme0;
 
 public class TApp extends Application {
 
@@ -18,6 +20,9 @@ public class TApp extends Application {
         super.onCreate();
         tApp = this;
         MobSDK.init(this);
+        BBSSDK.ensureInit();
+//        BBSSDK.registerSDK();
+        BBSTheme0.init();
     }
 
     @Override

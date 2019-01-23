@@ -14,10 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mob.bbssdk.gui.pages.forum.PageMain;
+import com.mob.bbssdk.gui.views.MainViewInterface;
+import com.mob.tools.FakeActivity;
+import com.mob.tools.utils.ResHelper;
+import com.mob.ums.OperationCallback;
+import com.mob.ums.UMSSDK;
+import com.mob.ums.User;
+import com.mob.wrappers.UMSSDKWrapper;
+import com.szx.tidy.activity.LoginActivity;
+import com.szx.tidy.activity.RegisterActivity;
 import com.szx.tidy.activity.SecondActivity;
 import com.szx.tidy.activity.WebActivity;
+import com.szx.tidy.manager.UserManager;
 
 import java.util.HashMap;
 
@@ -27,11 +39,14 @@ import cn.smssdk.gui.RegisterPage;
 
 public class TidyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    TextView nickname, signature;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tidy);
+        mContext = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("8888");
         setSupportActionBar(toolbar);
@@ -53,30 +68,35 @@ public class TidyActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        nickname = navigationView.getHeaderView(0).findViewById(R.id.nickname);
+        signature = navigationView.getHeaderView(0).findViewById(R.id.signature);
+        if (!UserManager.getInstance().isLogin()) {
+            startActivity(new Intent(TidyActivity.this, LoginActivity.class));
+        }
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        User user = UserManager.getInstance().getUser();
+        nickname.setText(user.nickname.get());
+        signature.setText(user.signature.get());
+        if (UserManager.getInstance().isLogin()) {
+//            MainViewInterface mainView = (MainViewInterface) findViewById(ResHelper.getIdRes(this, "mainView"));
+//            mainView.loadData();
 
-    public void sendCode(Context context) {
-        RegisterPage page = new RegisterPage();
-        //如果使用我们的ui，没有申请模板编号的情况下需传null
-        page.setTempCode(null);
-        page.setRegisterCallback(new EventHandler() {
-            public void afterEvent(int event, int result, Object data) {
-                if (result == SMSSDK.RESULT_COMPLETE) {
-                    // 处理成功的结果
-                    HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
-                    String country = (String) phoneMap.get("country"); // 国家代码，如“86”
-                    String phone = (String) phoneMap.get("phone"); // 手机号码，如“13800138000”
-                    Toast.makeText(TidyActivity.this, "验证成功：country:" + country + "    phone:" + phone, Toast.LENGTH_LONG).show();
-                    // TODO 利用国家代码和手机号码进行后续的操作
-                } else {
-                    // TODO 处理错误的结果
-                    Toast.makeText(TidyActivity.this, "验证失败!", Toast.LENGTH_LONG).show();
+            PageMain pageMain = new PageMain();
+            pageMain.show(mContext);
+            pageMain.showForResult(mContext, new FakeActivity() {
+                public void onResult(HashMap<String, Object> data) {
+                    //TODO 界面返回回调
+                    Toast.makeText(TidyActivity.this, "data!" + data.toString(), Toast.LENGTH_LONG).show();
                 }
-            }
-        });
-        page.show(context);
+            });
+
+
+        }
     }
 
     @Override
@@ -118,24 +138,63 @@ public class TidyActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//            Intent intent = new Intent(TidyActivity.this, SecondActivity.class);
+//            TidyActivity.this.startActivity(intent);
+//        } else if (id == R.id.nav_send) {
+//            Intent intent = new Intent(TidyActivity.this, WebActivity.class);
+//            TidyActivity.this.startActivity(intent);
+//        }
+        if (id == R.id.nav_loginout) {
+            UMSSDK.logout(new OperationCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    super.onSuccess(aVoid);
+                    nickname.setText("");
+                    signature.setText("");
+                    UserManager.getInstance().setLogin(UserManager.NOT_LOGIN);
+                    UserManager.getInstance().setUser(new User());
+                }
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(TidyActivity.this, SecondActivity.class);
-            TidyActivity.this.startActivity(intent);
-        } else if (id == R.id.nav_send) {
-            Intent intent = new Intent(TidyActivity.this, WebActivity.class);
-            TidyActivity.this.startActivity(intent);
+                @Override
+                public void onFailed(Throwable throwable) {
+                    super.onFailed(throwable);
+                }
+            });
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void sendCode(Context context) {
+        RegisterPage page = new RegisterPage();
+        //如果使用我们的ui，没有申请模板编号的情况下需传null
+        page.setTempCode(null);
+        page.setRegisterCallback(new EventHandler() {
+            public void afterEvent(int event, int result, Object data) {
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    // 处理成功的结果
+                    HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
+                    String country = (String) phoneMap.get("country"); // 国家代码，如“86”
+                    String phone = (String) phoneMap.get("phone"); // 手机号码，如“13800138000”
+                    Toast.makeText(TidyActivity.this, "验证成功：country:" + country + "    phone:" + phone, Toast.LENGTH_LONG).show();
+                    // TODO 利用国家代码和手机号码进行后续的操作
+                } else {
+                    // TODO 处理错误的结果
+                    Toast.makeText(TidyActivity.this, "验证失败!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        page.show(context);
     }
 }
