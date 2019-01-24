@@ -1,5 +1,6 @@
 package com.szx.tidy;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,10 +27,12 @@ import com.mob.ums.UMSSDK;
 import com.mob.ums.User;
 import com.mob.wrappers.UMSSDKWrapper;
 import com.szx.tidy.activity.LoginActivity;
+import com.szx.tidy.activity.MvvmActivity;
 import com.szx.tidy.activity.RegisterActivity;
 import com.szx.tidy.activity.SecondActivity;
 import com.szx.tidy.activity.WebActivity;
 import com.szx.tidy.manager.UserManager;
+import com.szx.tidy.model.MVVMViewModel;
 
 import java.util.HashMap;
 
@@ -56,6 +59,7 @@ public class TidyActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                startActivity(new Intent(TidyActivity.this, MvvmActivity.class));
             }
         });
 
@@ -71,7 +75,7 @@ public class TidyActivity extends AppCompatActivity
         nickname = navigationView.getHeaderView(0).findViewById(R.id.nickname);
         signature = navigationView.getHeaderView(0).findViewById(R.id.signature);
         if (!UserManager.getInstance().isLogin()) {
-            startActivity(new Intent(TidyActivity.this, LoginActivity.class));
+//            startActivity(new Intent(TidyActivity.this, LoginActivity.class));
         }
 
     }
@@ -86,14 +90,14 @@ public class TidyActivity extends AppCompatActivity
 //            MainViewInterface mainView = (MainViewInterface) findViewById(ResHelper.getIdRes(this, "mainView"));
 //            mainView.loadData();
 
-            PageMain pageMain = new PageMain();
-            pageMain.show(mContext);
-            pageMain.showForResult(mContext, new FakeActivity() {
-                public void onResult(HashMap<String, Object> data) {
-                    //TODO 界面返回回调
-                    Toast.makeText(TidyActivity.this, "data!" + data.toString(), Toast.LENGTH_LONG).show();
-                }
-            });
+//            PageMain pageMain = new PageMain();
+//            pageMain.show(mContext);
+//            pageMain.showForResult(mContext, new FakeActivity() {
+//                public void onResult(HashMap<String, Object> data) {
+//                    //TODO 界面返回回调
+//                    Toast.makeText(TidyActivity.this, "data!" + data.toString(), Toast.LENGTH_LONG).show();
+//                }
+//            });
 
 
         }
@@ -169,6 +173,11 @@ public class TidyActivity extends AppCompatActivity
                     super.onFailed(throwable);
                 }
             });
+        }else if (id == R.id.nav_share) {
+            MVVMViewModel mvvmViewModel = ViewModelProviders.of(this).get(MVVMViewModel.class);
+            mvvmViewModel.setData2();
+            Intent intent = new Intent(TidyActivity.this, SecondActivity.class);
+            TidyActivity.this.startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

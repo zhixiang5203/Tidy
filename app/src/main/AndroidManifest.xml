@@ -40,6 +40,12 @@
             android:name=".activity.RegisterActivity"
             android:label="SecondActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MvvmActivity"
+            android:label="SecondActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
     </application>
 
 </manifest>
