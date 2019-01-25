@@ -46,13 +46,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:text="1234566" />
+                android:text="@{viewModel.title}" />
 
             <Button
                 android:id="@+id/click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:onClick="@{viewModel.onButtonClickListener}"
                 android:text="点击" />
         </RelativeLayout>
 

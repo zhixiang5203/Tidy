@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.szx.tidy.bean.UserData;
 
@@ -51,4 +52,14 @@ public class MVVMViewModel extends AndroidViewModel {
             ((MutableLiveData<UserData>) mLiveObservableData).postValue(data);
         }
     }
+
+    public View.OnClickListener onButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            setData2();
+        }
+    };
+
+
 }

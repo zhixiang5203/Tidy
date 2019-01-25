@@ -26,14 +26,14 @@ public class MvvmActivity extends AppCompatActivity {
         activityMvvmBinding.getRoot().setFitsSystemWindows(true);
         activityMvvmBinding.toolbar.setTitle("MVVM");
         activityMvvmBinding.mvvmText.setText("你好");
-        activityMvvmBinding.click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mvvmViewModel != null) {
-                    mvvmViewModel.setData();
-                }
-            }
-        });
+//        activityMvvmBinding.click.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mvvmViewModel != null) {
+//                    mvvmViewModel.setData();
+//                }
+//            }
+//        });
 //        activityMvvmBinding.image.setImageResource(R.drawable.bbs_add_emoji);
         String url = "https://wx1.sinaimg.cn/large/006uGoWvgy1fz3lv4vpuuj31f12ip1l0.jpg";
 
