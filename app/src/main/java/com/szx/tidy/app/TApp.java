@@ -9,9 +9,9 @@ import com.mob.bbssdk.theme0.BBSTheme0;
 
 public class TApp extends Application {
 
-    public static TApp tApp;
+    private static TApp tApp;
 
-    public static TApp gettApp() {
+    public static TApp getApp() {
         return tApp;
     }
 

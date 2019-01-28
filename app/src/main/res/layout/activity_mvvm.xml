@@ -45,15 +45,13 @@
                 android:id="@+id/mvvm_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:text="@{viewModel.title}" />
+                android:layout_marginTop="100dp"/>
 
             <Button
                 android:id="@+id/click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:onClick="@{viewModel.onButtonClickListener}"
                 android:text="点击" />
         </RelativeLayout>
 

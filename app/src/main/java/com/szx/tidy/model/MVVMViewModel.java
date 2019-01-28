@@ -53,13 +53,6 @@ public class MVVMViewModel extends AndroidViewModel {
         }
     }
 
-    public View.OnClickListener onButtonClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            setData2();
-        }
-    };
 
 
 }

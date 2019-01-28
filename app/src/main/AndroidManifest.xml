@@ -44,6 +44,10 @@
             android:name=".activity.MvvmActivity"
             android:label="SecondActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.RecyclerViewActivity"
+            android:label="SecondActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
     </application>

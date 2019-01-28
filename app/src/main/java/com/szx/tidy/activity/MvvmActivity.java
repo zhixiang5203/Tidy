@@ -23,7 +23,6 @@ public class MvvmActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMvvmBinding = DataBindingUtil.setContentView(this, R.layout.activity_mvvm);
-        activityMvvmBinding.getRoot().setFitsSystemWindows(true);
         activityMvvmBinding.toolbar.setTitle("MVVM");
         activityMvvmBinding.mvvmText.setText("你好");
 //        activityMvvmBinding.click.setOnClickListener(new View.OnClickListener() {

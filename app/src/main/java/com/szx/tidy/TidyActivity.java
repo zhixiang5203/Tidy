@@ -28,6 +28,7 @@ import com.mob.ums.User;
 import com.mob.wrappers.UMSSDKWrapper;
 import com.szx.tidy.activity.LoginActivity;
 import com.szx.tidy.activity.MvvmActivity;
+import com.szx.tidy.activity.RecyclerViewActivity;
 import com.szx.tidy.activity.RegisterActivity;
 import com.szx.tidy.activity.SecondActivity;
 import com.szx.tidy.activity.WebActivity;
@@ -129,7 +130,11 @@ public class TidyActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            sendCode(TidyActivity.this);
+//            sendCode(TidyActivity.this);
+
+
+            TidyActivity.this.startActivity(new Intent(TidyActivity.this, RecyclerViewActivity.class));
+
             return true;
         }
 
@@ -173,7 +178,7 @@ public class TidyActivity extends AppCompatActivity
                     super.onFailed(throwable);
                 }
             });
-        }else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {
             MVVMViewModel mvvmViewModel = ViewModelProviders.of(this).get(MVVMViewModel.class);
             mvvmViewModel.setData2();
             Intent intent = new Intent(TidyActivity.this, SecondActivity.class);
