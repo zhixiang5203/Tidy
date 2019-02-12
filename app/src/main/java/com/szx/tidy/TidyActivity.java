@@ -3,7 +3,10 @@ package com.szx.tidy;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.mob.bbssdk.gui.pages.forum.PageMain;
 import com.mob.bbssdk.gui.views.MainViewInterface;
 import com.mob.tools.FakeActivity;
@@ -32,53 +36,82 @@ import com.szx.tidy.activity.RecyclerViewActivity;
 import com.szx.tidy.activity.RegisterActivity;
 import com.szx.tidy.activity.SecondActivity;
 import com.szx.tidy.activity.WebActivity;
+import com.szx.tidy.adapter.FragmentAdapter;
+import com.szx.tidy.base.ARouterPath;
+import com.szx.tidy.base.BaseActivity;
+import com.szx.tidy.base.BaseFragment;
+import com.szx.tidy.databinding.ActivityTidyBinding;
 import com.szx.tidy.manager.UserManager;
 import com.szx.tidy.model.MVVMViewModel;
+import com.szx.tidy.model.TidyModel;
+import com.szx.tidy.widget.NoScrollViewPager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.gui.RegisterPage;
 
-public class TidyActivity extends AppCompatActivity
+public class TidyActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     TextView nickname, signature;
     Context mContext;
+    ActivityTidyBinding binding;
+    private NoScrollViewPager mPager;
+    private List<BaseFragment> mFragments = new ArrayList<>();
+    private FragmentAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tidy);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_tidy);
+//        binding.includeContent.setViewModel(new TidyModel(getApplication()));
         mContext = this;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("8888");
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                startActivity(new Intent(TidyActivity.this, MvvmActivity.class));
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        nickname = navigationView.getHeaderView(0).findViewById(R.id.nickname);
-        signature = navigationView.getHeaderView(0).findViewById(R.id.signature);
+        binding.includeContent.toolbar.setTitle("8888");
+        setSupportActionBar(binding.includeContent.toolbar);
+        initToggle();
+        initFragment();
         if (!UserManager.getInstance().isLogin()) {
 //            startActivity(new Intent(TidyActivity.this, LoginActivity.class));
         }
+    }
 
+    private void initToggle() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, binding.drawerLayout, binding.includeContent.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        binding.navView.setNavigationItemSelectedListener(this);
+        nickname = binding.navView.getHeaderView(0).findViewById(R.id.nickname);
+        signature = binding.navView.getHeaderView(0).findViewById(R.id.signature);
+        //        binding.includeAppBar.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                startActivity(new Intent(TidyActivity.this, MvvmActivity.class));
+//            }
+//        });
+    }
+
+    private void initFragment() {
+        binding.includeContent.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        mPager = binding.includeContent.containerPager;
+        mPager.setOffscreenPageLimit(3);
+        BaseFragment fragmentHome = (BaseFragment) ARouter.getInstance().build(ARouterPath.HomeListFgt).navigation();
+        BaseFragment fragmentDisplay = (BaseFragment) ARouter.getInstance().build(ARouterPath.DisplayListFgt).navigation();
+        BaseFragment fragmentDiscover = (BaseFragment) ARouter.getInstance().build(ARouterPath.DiscoverListFgt).navigation();
+        BaseFragment fragmentRecommend = (BaseFragment) ARouter.getInstance().build(ARouterPath.RecommendListFgt).navigation();
+        mFragments.add(fragmentHome);
+        mFragments.add(fragmentDisplay);
+        mFragments.add(fragmentDiscover);
+        mFragments.add(fragmentRecommend);
+        mAdapter = new FragmentAdapter(getSupportFragmentManager(), mFragments);
+        binding.includeContent.setViewPaAdapter(mAdapter);
     }
 
     @Override
@@ -103,6 +136,7 @@ public class TidyActivity extends AppCompatActivity
 
         }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -140,6 +174,7 @@ public class TidyActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -211,4 +246,26 @@ public class TidyActivity extends AppCompatActivity
         });
         page.show(context);
     }
+
+
+    public BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int i = item.getItemId();
+            if (i == R.id.navigation_home) {
+                mPager.setCurrentItem(0);
+                return true;
+            } else if (i == R.id.navigation_display) {
+                mPager.setCurrentItem(1);
+                return true;
+            } else if (i == R.id.navigation_discover) {
+                mPager.setCurrentItem(2);
+                return true;
+            }
+            return false;
+        }
+
+    };
 }

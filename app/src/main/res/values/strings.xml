@@ -6,4 +6,10 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="bottom_home">首页</string>
+    <string name="bottom_display">展示</string>
+    <string name="bottom_discover">发现</string>
+    <string name="bottom_recommend">推荐</string>
 </resources>
