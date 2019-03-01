@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content">
+    <com.szx.tidy.widget.DotsView
+        android:id="@+id/vDotsView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"/>
+
+    <com.szx.tidy.widget.CircleView
+        android:id="@+id/vCircle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        />
+    <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:src="@drawable/like_select"/>
+</merge>

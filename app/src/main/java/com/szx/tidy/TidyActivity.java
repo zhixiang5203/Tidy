@@ -7,43 +7,29 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.mob.bbssdk.gui.pages.forum.PageMain;
-import com.mob.bbssdk.gui.views.MainViewInterface;
-import com.mob.tools.FakeActivity;
-import com.mob.tools.utils.ResHelper;
 import com.mob.ums.OperationCallback;
 import com.mob.ums.UMSSDK;
 import com.mob.ums.User;
-import com.mob.wrappers.UMSSDKWrapper;
-import com.szx.tidy.activity.LoginActivity;
-import com.szx.tidy.activity.MvvmActivity;
 import com.szx.tidy.activity.RecyclerViewActivity;
-import com.szx.tidy.activity.RegisterActivity;
 import com.szx.tidy.activity.SecondActivity;
-import com.szx.tidy.activity.WebActivity;
 import com.szx.tidy.adapter.FragmentAdapter;
 import com.szx.tidy.base.ARouterPath;
 import com.szx.tidy.base.BaseActivity;
 import com.szx.tidy.base.BaseFragment;
 import com.szx.tidy.databinding.ActivityTidyBinding;
+import com.szx.tidy.helper.BottomNavigationViewHelper;
 import com.szx.tidy.manager.UserManager;
 import com.szx.tidy.model.MVVMViewModel;
-import com.szx.tidy.model.TidyModel;
 import com.szx.tidy.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -70,8 +56,9 @@ public class TidyActivity extends BaseActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tidy);
 //        binding.includeContent.setViewModel(new TidyModel(getApplication()));
         mContext = this;
-        binding.includeContent.toolbar.setTitle("8888");
+        binding.includeContent.toolbar.setTitle("title");
         setSupportActionBar(binding.includeContent.toolbar);
+        BottomNavigationViewHelper.disableShiftMode(binding.includeContent.bottomNavigation);//取消底部动画
         initToggle();
         initFragment();
         if (!UserManager.getInstance().isLogin()) {
@@ -140,9 +127,10 @@ public class TidyActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -224,6 +212,30 @@ public class TidyActivity extends BaseActivity
         return true;
     }
 
+    public BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int i = item.getItemId();
+            if (i == R.id.navigation_home) {
+                mPager.setCurrentItem(0);
+                return true;
+            } else if (i == R.id.navigation_display) {
+                mPager.setCurrentItem(1);
+                return true;
+            } else if (i == R.id.navigation_discover) {
+                mPager.setCurrentItem(2);
+                return true;
+            } else if (i == R.id.navigation_recommend) {
+                mPager.setCurrentItem(3);
+                return true;
+            }
+            return false;
+        }
+
+    };
+
 
     public void sendCode(Context context) {
         RegisterPage page = new RegisterPage();
@@ -248,24 +260,4 @@ public class TidyActivity extends BaseActivity
     }
 
 
-    public BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            int i = item.getItemId();
-            if (i == R.id.navigation_home) {
-                mPager.setCurrentItem(0);
-                return true;
-            } else if (i == R.id.navigation_display) {
-                mPager.setCurrentItem(1);
-                return true;
-            } else if (i == R.id.navigation_discover) {
-                mPager.setCurrentItem(2);
-                return true;
-            }
-            return false;
-        }
-
-    };
 }
