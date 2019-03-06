@@ -58,7 +58,7 @@ public class TidyActivity extends BaseActivity
         mContext = this;
         binding.includeContent.toolbar.setTitle("title");
         setSupportActionBar(binding.includeContent.toolbar);
-        BottomNavigationViewHelper.disableShiftMode(binding.includeContent.bottomNavigation);//取消底部动画
+        BottomNavigationViewHelper.disableShiftMode(binding.includeContent.navigation);//取消底部动画
         initToggle();
         initFragment();
         if (!UserManager.getInstance().isLogin()) {

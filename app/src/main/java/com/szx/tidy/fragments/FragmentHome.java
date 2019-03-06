@@ -2,13 +2,20 @@ package com.szx.tidy.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.szx.tidy.R;
 import com.szx.tidy.base.ARouterPath;
 import com.szx.tidy.base.BaseFragment;
+
+import java.util.ArrayList;
 
 
 /**
@@ -24,6 +31,9 @@ public class FragmentHome extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    View rootView;
+    ImageView image;
 
     public FragmentHome() {
     }
@@ -55,10 +65,29 @@ public class FragmentHome extends BaseFragment {
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        initView();
+        return rootView;
     }
+
+
+    public void initView() {
+        image = rootView.findViewById(R.id.image);
+        Animation operatingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.tip);
+        LinearInterpolator lin = new LinearInterpolator();
+        operatingAnim.setInterpolator(lin);
+        if (operatingAnim != null) {
+            image.startAnimation(operatingAnim);
+        }
+    }
+
+
+
+
 }

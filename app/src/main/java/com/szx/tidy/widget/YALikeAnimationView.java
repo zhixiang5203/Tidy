@@ -47,7 +47,7 @@ public class YALikeAnimationView extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent ev) {
         dispatchXPosition = ev.getX();
         dispatchYPosition = ev.getY();
-        startAnimation();
+//        startAnimation();
         return super.onTouchEvent(ev);
     }
 
